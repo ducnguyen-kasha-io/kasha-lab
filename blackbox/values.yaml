@@ -1,0 +1,44 @@
+prometheus-json-exporter:
+  enabled: false
+prometheus-blackbox-exporter:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    targets:
+      # GRAFANA STAGING
+      - name: grafana.stg.lin-saas.com
+        url: https://grafana.stg.lin-saas.com      
+      # TWAKE WORKPLACE STAGING
+      - name: manager.stg.lin-saas.com
+        url: https://manager.stg.lin-saas.com
+      - name: auth.stg.lin-saas.com
+        url: https://auth.stg.lin-saas.com/languages
+      - name: office.stg.lin-saas.com
+        url: https://office.stg.lin-saas.com
+      - name: drive.stg.lin-saas.com
+        url: https://drive.stg.lin-saas.com
+      - name: jmap.stg.lin-saas.com
+        url: https://jmap.stg.lin-saas.com
+      - name: mail.stg.lin-saas.com
+        url: https://mail.stg.lin-saas.com
+      - name: tom.stg.lin-saas.com
+        url: https://tom.stg.lin-saas.com
+      - name: sign-up.stg.lin-saas.com
+        url: https://sign-up.stg.lin-saas.com
+
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      externalLabels:
+        cluster: monitor-stg
+      remoteWrite:
+        - url: https://metrics.staging-monitor.lin-saas.com/api/v1/push
+          headers:
+            X-Scope-OrgID: monitor-stg
+          basicAuth:
+            username:
+              name: "metrics-gw-auth"
+              key: "username"
+            password:
+              name: "metrics-gw-auth"
+              key: "password"

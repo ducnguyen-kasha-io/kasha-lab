@@ -1,0 +1,7 @@
+environments:
+  dev:
+    kubeContext: gke-dev-kasha
+  stg:
+    kubeContext: gke-staging-kasha
+  prd:
+    kubeContext: gke-prod-kasha

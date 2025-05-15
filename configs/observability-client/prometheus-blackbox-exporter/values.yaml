@@ -1,0 +1,25 @@
+serviceMonitor:
+  enabled: true
+  targets:
+    - name: landing-page
+      url: https://kasha.io
+    - name: app-home
+      url: https://app.kasha.io
+    - name: onboarding
+      url: https://app.kasha.io/onboarding
+    - name: invoices
+      url: https://app.kasha.io/invoices
+    - name: clients
+      url: https://app.kasha.io/clients
+    - name: bookings
+      url: https://app.kasha.io/bookings
+    - name: money
+      url: https://app.kasha.io/money
+    - name: studio
+      url: https://app.kasha.io/studio
+    - name: admin
+      url: https://admin.kasha.io
+    # - name: cdn-1
+    #   url: https://cdn.kasha.io
+    # - name: cdn-2
+    #   url: https://cdn2.kasha.io

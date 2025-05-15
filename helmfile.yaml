@@ -1,0 +1,30 @@
+# Need to declare bases in top and bottom layers
+bases:
+  - environments.yaml
+  - charts/repos.yaml  
+---
+templates:
+  default:
+    missingFileHandler: Warn
+    values:
+    - configs/{{`{{ .Release.Namespace }}`}}/{{`{{ .Release.Name }}`}}/values.yaml
+    - configs/{{`{{ .Release.Namespace }}`}}/{{`{{ .Release.Name }}`}}/{{`{{ .Environment.Name }}`}}/values.yaml
+    secrets:
+    - configs/{{`{{ .Release.Namespace }}`}}/{{`{{ .Release.Name }}`}}/secrets.yaml
+    - configs/{{`{{ .Release.Namespace }}`}}/{{`{{ .Release.Name }}`}}/{{`{{ .Environment.Name }}`}}/secrets.yaml
+---
+helmDefaults:
+  diffArgs:
+    # - "--show-secrets"
+    - "--context=3"
+  skipDeps: false
+  createNamespace: false
+  historyMax: 5
+---
+releases:
+  - name: prometheus-blackbox-exporter
+    namespace: observability-client
+    chart: prometheus-community/prometheus-blackbox-exporter
+    version: 9.5.0
+    inherit:
+    - template: default
