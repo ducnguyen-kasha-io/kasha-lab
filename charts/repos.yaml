@@ -8,3 +8,7 @@ repositories:
     url: https://charts.gitlab.io
   - name: istio
     url: https://istio-release.storage.googleapis.com/charts
+  - name: runix
+    url: https://helm.runix.net
+  - name: grafana
+    url: https://grafana.github.io/helm-charts

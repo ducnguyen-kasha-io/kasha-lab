@@ -5,3 +5,6 @@ environments:
     kubeContext: gke-staging-kasha
   prd:
     kubeContext: gke-prod-kasha
+  bastion-prd:
+    kubeContext: gke-bastion-prod-kasha
+

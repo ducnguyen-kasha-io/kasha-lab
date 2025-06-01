@@ -49,3 +49,17 @@ releases:
     version: 9.5.0
     inherit:
     - template: default
+
+  - name: pgadmin4
+    namespace: observability-client
+    chart: runix/pgadmin4
+    version: 1.45.1
+    inherit:
+    - template: default
+  
+  - name: k8s-monitoring
+    namespace: observability-client
+    chart: grafana/k8s-monitoring
+    version: 2.1.4
+    inherit:
+    - template: default
