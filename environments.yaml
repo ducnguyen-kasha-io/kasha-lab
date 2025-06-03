@@ -7,4 +7,5 @@ environments:
     kubeContext: gke-prod-kasha
   bastion-prd:
     kubeContext: gke-bastion-prod-kasha
-
+  test:
+    kubeContext: gke-test-kasha

@@ -12,3 +12,5 @@ repositories:
     url: https://helm.runix.net
   - name: grafana
     url: https://grafana.github.io/helm-charts
+  - name: kubernetes-dashboard
+    url: https://kubernetes.github.io/dashboard
