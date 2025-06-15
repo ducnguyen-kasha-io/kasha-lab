@@ -14,3 +14,5 @@ repositories:
     url: https://grafana.github.io/helm-charts
   - name: kubernetes-dashboard
     url: https://kubernetes.github.io/dashboard
+  - name: wazuh
+    url: https://morgoved.github.io/wazuh-helm/    

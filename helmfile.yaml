@@ -59,8 +59,8 @@ releases:
   
   - name: k8s-monitoring
     namespace: observability-client
-    chart: .local/k8s-monitoring
-    version: 2.1.4
+    chart: grafana/k8s-monitoring
+    version: 3.0.1
     inherit:
     - template: default
 
@@ -68,5 +68,12 @@ releases:
     namespace: observability-client
     chart: kubernetes-dashboard/kubernetes-dashboard
     version: 7.13.0
+    inherit:
+      - template: default
+
+  - name: wazuh
+    namespace: siem
+    chart: wazuh/wazuh
+    version: 0.1.4
     inherit:
       - template: default
