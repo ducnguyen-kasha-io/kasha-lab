@@ -15,4 +15,8 @@ repositories:
   - name: kubernetes-dashboard
     url: https://kubernetes.github.io/dashboard
   - name: wazuh
-    url: https://morgoved.github.io/wazuh-helm/    
+    url: https://morgoved.github.io/wazuh-helm/
+  - name: external-secrets
+    url: https://charts.external-secrets.io
+  - name: stakater
+    url: https://stakater.github.io/stakater-charts/

@@ -77,3 +77,17 @@ releases:
     version: 0.1.4
     inherit:
       - template: default
+
+  - name: external-secrets-operator
+    namespace: external-secrets
+    chart: external-secrets/external-secrets
+    version: 0.10.7
+    inherit:
+      - template: default
+
+  - name: secrets-reloader
+    namespace: external-secrets
+    chart: stakater/reloader
+    version: 2.1.4
+    inherit:
+      - template: default
