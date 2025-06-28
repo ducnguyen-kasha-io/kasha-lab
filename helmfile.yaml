@@ -64,13 +64,6 @@ releases:
     inherit:
     - template: default
 
-  - name: k8s-dashboard
-    namespace: observability-client
-    chart: kubernetes-dashboard/kubernetes-dashboard
-    version: 7.13.0
-    inherit:
-      - template: default
-
   - name: wazuh
     namespace: siem
     chart: wazuh/wazuh
@@ -82,6 +75,13 @@ releases:
     namespace: external-secrets
     chart: external-secrets/external-secrets
     version: 0.10.7
+    inherit:
+      - template: default
+
+  - name: grafana-operator
+    namespace: observability
+    chart: grafana-operator/grafana-operator
+    version: v5.18.0
     inherit:
       - template: default
 
