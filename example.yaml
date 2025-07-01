@@ -1,0 +1,329 @@
+# Prometheus DataSource
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: prometheus-datasource
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus-server.observability.svc.cluster.local:80
+    isDefault: true
+    jsonData:
+      httpMethod: POST
+      queryTimeout: 60s
+      timeInterval: 30s
+    secureJsonData:
+      httpHeaderValue1: "Bearer ${PROMETHEUS_TOKEN}"
+---
+# Loki DataSource
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: loki-datasource
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: Loki
+    type: loki
+    access: proxy
+    url: http://loki-gateway.observability.svc.cluster.local:80
+    jsonData:
+      maxLines: 1000
+      timeout: 60s
+      derivedFields:
+        - datasourceUid: "jaeger-uid"
+          matcherRegex: "traceID=(\\w+)"
+          name: "TraceID"
+          url: "$${__value.raw}"
+---
+# Jaeger DataSource
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: jaeger-datasource
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger-query.observability.svc.cluster.local:16686
+    uid: jaeger-uid
+    jsonData:
+      tracesToLogs:
+        datasourceUid: "loki-uid"
+        tags:
+          - key: "service.name"
+            value: "service"
+        mappedTags:
+          - key: "service.name"
+            value: "service"
+        mapTagNamesEnabled: true
+        spanStartTimeShift: "-1h"
+        spanEndTimeShift: "1h"
+        filterByTraceID: true
+        filterBySpanID: false
+---
+# MongoDB DataSource (using external secrets)
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: mongodb-datasource
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: MongoDB
+    type: haohanyang-mongodb-datasource
+    access: proxy
+    url: "${MONGODB_URL}"
+    database: "${MONGODB_DATABASE}"
+    user: "${MONGODB_USER}"
+    secureJsonData:
+      password: "${MONGODB_PASSWORD}"
+    jsonData:
+      authSource: "admin"
+      ssl: true
+      sslValidate: false
+      connectTimeout: 30
+      socketTimeout: 30
+      maxPoolSize: 10
+  valuesFrom:
+    - targetPath: "datasource.url"
+      valueFrom:
+        secretKeyRef:
+          name: mongodb-secrets
+          key: connection_url
+    - targetPath: "datasource.database"
+      valueFrom:
+        secretKeyRef:
+          name: mongodb-secrets
+          key: database_name
+    - targetPath: "datasource.user"
+      valueFrom:
+        secretKeyRef:
+          name: mongodb-secrets
+          key: username
+    - targetPath: "datasource.secureJsonData.password"
+      valueFrom:
+        secretKeyRef:
+          name: mongodb-secrets
+          key: password
+---
+# BigQuery DataSource (using external secrets)
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: bigquery-datasource
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: BigQuery
+    type: doitintl-bigquery-datasource
+    access: proxy
+    jsonData:
+      authenticationType: "gce"
+      defaultProject: "${GCP_PROJECT_ID}"
+      queryTimeout: "300s"
+      maxTimeSeries: 3000
+      useLegacySql: false
+    secureJsonData:
+      privateKey: "${GCP_SERVICE_ACCOUNT_KEY}"
+  valuesFrom:
+    - targetPath: "datasource.jsonData.defaultProject"
+      valueFrom:
+        secretKeyRef:
+          name: gcp-secrets
+          key: project_id
+    - targetPath: "datasource.secureJsonData.privateKey"
+      valueFrom:
+        secretKeyRef:
+          name: gcp-secrets
+          key: service_account_key
+---
+# PostgreSQL DataSource
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: postgresql-datasource
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: "${POSTGRES_HOST}:${POSTGRES_PORT}"
+    database: "${POSTGRES_DATABASE}"
+    user: "${POSTGRES_USER}"
+    secureJsonData:
+      password: "${POSTGRES_PASSWORD}"
+    jsonData:
+      sslmode: "require"
+      postgresVersion: 1400
+      timescaledb: false
+      maxOpenConns: 100
+      maxIdleConns: 100
+      connMaxLifetime: 14400
+  valuesFrom:
+    - targetPath: "datasource.url"
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: connection_string
+    - targetPath: "datasource.database"
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: database_name
+    - targetPath: "datasource.user"
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: username
+    - targetPath: "datasource.secureJsonData.password"
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: password
+---
+# CloudWatch DataSource
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: cloudwatch-datasource
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  datasource:
+    name: CloudWatch
+    type: cloudwatch
+    access: proxy
+    jsonData:
+      authType: "keys"
+      defaultRegion: "us-east-1"
+      customMetricsNamespaces: "AWS/ECS,AWS/ELB,AWS/RDS"
+      assumeRoleArn: "${AWS_ASSUME_ROLE_ARN}"
+    secureJsonData:
+      accessKey: "${AWS_ACCESS_KEY_ID}"
+      secretKey: "${AWS_SECRET_ACCESS_KEY}"
+  valuesFrom:
+    - targetPath: "datasource.secureJsonData.accessKey"
+      valueFrom:
+        secretKeyRef:
+          name: aws-secrets
+          key: access_key_id
+    - targetPath: "datasource.secureJsonData.secretKey"
+      valueFrom:
+        secretKeyRef:
+          name: aws-secrets
+          key: secret_access_key
+    - targetPath: "datasource.jsonData.assumeRoleArn"
+      valueFrom:
+        secretKeyRef:
+          name: aws-secrets
+          key: assume_role_arn
+---
+# External Secrets for DataSources
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: datasource-secrets
+  namespace: observability
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: mongodb-secrets
+    creationPolicy: Owner
+  dataFrom:
+    - extract:
+        key: "/common/mongodb-secrets"
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: gcp-secrets
+  namespace: observability
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: gcp-secrets
+    creationPolicy: Owner
+  dataFrom:
+    - extract:
+        key: "/common/gcp-secrets"
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: postgres-secrets
+  namespace: observability
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: postgres-secrets
+    creationPolicy: Owner
+  dataFrom:
+    - extract:
+        key: "/common/postgres-secrets"
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: aws-secrets
+  namespace: observability
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: aws-secrets
+    creationPolicy: Owner
+  dataFrom:
+    - extract:
+        key: "/common/aws-secrets"

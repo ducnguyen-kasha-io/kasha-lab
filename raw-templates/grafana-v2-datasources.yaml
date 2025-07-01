@@ -1,0 +1,82 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-dev-kasha
+  namespace: observability
+spec:
+  uid: "metrics-gke-dev-kasha"
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "ORG_ID_DEV"
+  datasource:
+    name: metrics-gke-dev-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    jsonData:
+      "tlsSkipVerify": true
+      "timeInterval": "5s"
+      httpHeaderName1: "X-Scope-OrgID"
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${ORG_ID_DEV}"
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-staging-kasha
+  namespace: observability
+spec:
+  uid: "metrics-gke-staging-kasha"
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "ORG_ID_STG"
+  datasource:
+    name: metrics-gke-staging-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    jsonData:
+      "tlsSkipVerify": true
+      "timeInterval": "5s"
+      httpHeaderName1: "X-Scope-OrgID"
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${ORG_ID_STG}"
+

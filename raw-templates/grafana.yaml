@@ -1,0 +1,120 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: grafana
+  namespace: observability
+spec:
+  chart:
+    spec:
+      chart: grafana
+      version: "8.11.3"
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  interval: 1m0s
+  releaseName: grafana
+  targetNamespace: observability
+  values:
+    replicas: 1
+    image: 
+      repository: grafana/grafana
+      # repository: grafana/grafana-enterprise
+      tag: 11.6.0
+    plugins:
+      - grafana-polystat-panel
+      - grafana-bigquery-datasource
+    grafana.ini:
+      server:
+        root_url: https://grafana.kasha.io
+        enable_gzip: "true"
+      auth:
+        disable_login_form: "false"
+      auth.azuread:
+        enabled: "true"
+        allow_sign_up: "true"
+        client_id: $__file{/etc/secrets/azuread_client_id}
+        client_secret: $__file{/etc/secrets/azuread_client_secret}
+        auth_url: "https://login.microsoftonline.com/01599455-31f6-4698-812b-887ffb90c9c9/oauth2/v2.0/authorize"
+        token_url: "https://login.microsoftonline.com/01599455-31f6-4698-812b-887ffb90c9c9/oauth2/v2.0/token"
+        allowed_domains: "kasha.io"
+        allowed_groups: ""
+        skip_org_role_sync: "true" ## Allow users from above group to create user in Azure but not map AzureAD role to Grafana
+      security:
+        admin_email: grafana@kasha.io
+      users:
+        viewers_can_edit: "true"
+      smtp:
+        enabled: true
+        skip_verify: true
+        host: smtp.sendgrid.net:587
+        from_address: no-reply@kasha.io
+        from_name: Grafana Kasha
+        user: $__file{/etc/secrets/smtp_username}
+        password: $__file{/etc/secrets/smtp_password}
+
+    admin:
+      existingSecret: grafana-secrets
+      userKey: admin_username
+      passwordKey: admin_password
+
+    env:
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: haohanyang-mongodb-datasource
+    extraSecretMounts:
+      - name: grafana-secrets
+        secretName: grafana-secrets
+        mountPath: /etc/secrets/
+        defaultMode: 0440
+        readOnly: true
+    ingress:
+      enabled: false
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "2Gi"
+      limits: 
+        cpu: "1200m"
+        memory: "4Gi"
+    persistence:
+      enabled: true
+      storageClassName: standard-rwo
+      accessModes:
+        - ReadWriteOnce
+      size: 50Gi
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: grafana-vs
+  namespace: observability
+spec:
+  gateways:
+    - istio-system/ingress
+  hosts:
+    - grafana.kasha.io
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: grafana.observability.svc.cluster.local
+            port:
+              number: 80
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: grafana-secrets
+  namespace: observability
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: grafana-secrets
+    creationPolicy: Owner
+  dataFrom:
+  - extract:
+      key: "/common/grafana-secrets"

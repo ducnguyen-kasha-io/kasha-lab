@@ -1,0 +1,59 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana-v2
+  labels:
+    datasource: "grafana"
+spec:
+  version: "11.6.3"
+  # deployment:
+  #   spec:
+  #     replicas: 1
+  #     template:
+  #       spec:
+  #         containers:
+  #           - name: grafana
+  #             envFrom:
+  #               - secretRef:
+  #                   name: grafana-secrets-v2
+  # plugins:
+  #   - name: grafana-polystat-panel
+  #     version: latest
+  #   - name: grafana-bigquery-datasource
+  #     version: latest
+  config:
+    log:
+      mode: "console"
+      level: "info"
+    log.console:
+      format: "json"
+    server:
+      root_url: https://grafana-green.kasha.io
+      enable_gzip: "true"
+    auth:
+      disable_login_form: "false"
+    auth.azuread:
+      enabled: "false"
+      # allow_sign_up: "true"
+      # client_id: "${AZUREAD_CLIENT_ID}"
+      # client_secret: "${AZUREAD_CLIENT_SECRET}"
+      # auth_url: "https://login.microsoftonline.com/01599455-31f6-4698-812b-887ffb90c9c9/oauth2/v2.0/authorize"
+      # token_url: "https://login.microsoftonline.com/01599455-31f6-4698-812b-887ffb90c9c9/oauth2/v2.0/token"
+      # allowed_domains: "kasha.io"
+      # allowed_groups: ""
+      # skip_org_role_sync: "true"
+    # security:
+    #   admin_user: "${ADMIN_USERNAME}"
+    #   admin_password: "${ADMIN_PASSWORD}"
+    #   admin_email: grafana@kasha.io
+    #   disable_initial_admin_creation: "false"
+    users:
+      viewers_can_edit: "true"
+    smtp:
+      enabled: "false"
+      # skip_verify: "true"
+      # host: smtp.sendgrid.net:587
+      # from_address: no-reply@kasha.io
+      # from_name: Grafana Kasha
+      # user: "${SMTP_USERNAME}"
+      # password: "${SMTP_PASSWORD}"
