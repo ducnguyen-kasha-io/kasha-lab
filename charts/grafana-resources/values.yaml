@@ -1,0 +1,32 @@
+grafana:
+  secretKeyRef: grafana-secrets-v2
+  provision:
+    alerts:
+      enabled: true
+    dashboards:
+      enabled: true
+    datasources:
+      enabled: true
+      tenantList:
+        ## Bastion Clusters
+        - clusterId: prod-bastion-kasha
+          clusterEnv: GKE_BASTION_PRD
+        - clusterId: non-prod-bastion-kasha
+          clusterEnv: GKE_BASTION_NON_PRD
+        ## Application Clusters
+        - clusterId: gke-dev-kasha
+          clusterEnv: GKE_DEV
+        - clusterId: gke-dev-kasha-web
+          clusterEnv: GKE_DEV
+        - clusterId: gke-staging-kasha
+          clusterEnv: GKE_STG
+        - clusterId: gke-staging-kasha-web
+          clusterEnv: GKE_STG
+        - clusterId: gke-prod-kasha
+          clusterEnv: GKE_PRD
+        - clusterId: gke-prod-kasha-web
+          clusterEnv: GKE_PRD
+        - clusterId: gke-test-kasha
+          clusterEnv: GKE_TST
+        - clusterId: gke-test-kasha-web
+          clusterEnv: GKE_TST

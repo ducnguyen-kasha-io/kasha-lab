@@ -1,0 +1,97 @@
+{{- define "tpl-datasources" -}}
+{{- range $provision := .Values.grafana.provision.datasources.tenantList -}}
+{{ $secretKeyRef := $.Values.grafana.secretKeyRef }}
+{{ $clusterId := $provision.clusterId }}
+{{ $clusterEnv := $provision.clusterEnv }}
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: {{ printf "metrics-%s" $clusterId }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  uid: {{ printf "metrics-%s" $clusterId }}
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "{{ printf "%s" $secretKeyRef }}"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "{{ printf "%s" $secretKeyRef }}"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "{{ printf "%s" $secretKeyRef }}"
+          key: "{{ printf "%s" $clusterEnv }}"
+  datasource:
+    name: {{ printf "metrics-%s" $clusterId }}
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${{ printf "{%s}" $clusterEnv }}"
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: {{ printf "logs-%s" $clusterId }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  uid: {{ printf "logs-%s" $clusterId }}
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "{{ printf "%s" $clusterEnv }}"
+  datasource:
+    name: {{ printf "logs-%s" $clusterId }}
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${{ printf "{%s}" $clusterEnv }}"
+---
+{{- end -}}
+{{- end -}}
+
