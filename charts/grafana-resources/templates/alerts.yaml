@@ -1,0 +1,3 @@
+{{ .Files.Get "files/notificationTemplate.kasha.team.message.yaml"  }}
+---
+{{ .Files.Get "files/notificationTemplate.kasha.team.title.yaml"  }}
