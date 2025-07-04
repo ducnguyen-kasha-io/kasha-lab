@@ -1,32 +1,44 @@
 grafana:
   secretKeyRef: grafana-secrets-v2
   provision:
-    alerts:
-      enabled: true
-    dashboards:
-      enabled: true
+    contactPoints:
+      - contactId: kasha-team-prd-alerts
+        contactUrl: https://kashaglobalholdinglimited.webhook.office.com/webhookb2/7f9a9209-4e9f-4538-a968-185887a64cfd@01599455-31f6-4698-812b-887ffb90c9c9/IncomingWebhook/56db33f180ea456594394b44a702a272/88fd40bf-4656-401d-b39b-3741bc13a446/V27sWqbFBYa6zktfFNxZpyGZJsJ0T32ThiVZGDJhzDvoA1
+        alertMatchers:
+          - - cluster
+            - =
+            - gke-prod-kasha
+          - - priority
+            - =~
+            - P0|P1
+      - contactId: kasha-team-non-prd-alerts
+        contactUrl: https://kashaglobalholdinglimited.webhook.office.com/webhookb2/7f9a9209-4e9f-4538-a968-185887a64cfd@01599455-31f6-4698-812b-887ffb90c9c9/IncomingWebhook/0e6461d89d9d489899ab6e4d10f9e43a/88fd40bf-4656-401d-b39b-3741bc13a446/V2phJ2WTm5j07j5KVPhZ29JIIeyRii3_Qwfi1kdQ9_2zQ1
+        alertMatchers:
+          - - cluster
+            - '!~'
+            - gke-prod-kasha
+          - - priority
+            - =~
+            - P0|P1
     datasources:
-      enabled: true
-      tenantList:
-        ## Bastion Clusters
-        - clusterId: prod-bastion-kasha
-          clusterEnv: GKE_BASTION_PRD
-        - clusterId: non-prod-bastion-kasha
-          clusterEnv: GKE_BASTION_NON_PRD
-        ## Application Clusters
-        - clusterId: gke-dev-kasha
-          clusterEnv: GKE_DEV
-        - clusterId: gke-dev-kasha-web
-          clusterEnv: GKE_DEV
-        - clusterId: gke-staging-kasha
-          clusterEnv: GKE_STG
-        - clusterId: gke-staging-kasha-web
-          clusterEnv: GKE_STG
-        - clusterId: gke-prod-kasha
-          clusterEnv: GKE_PRD
-        - clusterId: gke-prod-kasha-web
-          clusterEnv: GKE_PRD
-        - clusterId: gke-test-kasha
-          clusterEnv: GKE_TST
-        - clusterId: gke-test-kasha-web
-          clusterEnv: GKE_TST
+      - clusterId: prod-bastion-kasha
+        clusterEnv: GKE_BASTION_PRD
+      - clusterId: non-prod-bastion-kasha
+        clusterEnv: GKE_BASTION_NON_PRD
+      ## Application Clusters
+      - clusterId: gke-dev-kasha
+        clusterEnv: GKE_DEV
+      - clusterId: gke-dev-kasha-web
+        clusterEnv: GKE_DEV
+      - clusterId: gke-staging-kasha
+        clusterEnv: GKE_STG
+      - clusterId: gke-staging-kasha-web
+        clusterEnv: GKE_STG
+      - clusterId: gke-prod-kasha
+        clusterEnv: GKE_PRD
+      - clusterId: gke-prod-kasha-web
+        clusterEnv: GKE_PRD
+      - clusterId: gke-test-kasha
+        clusterEnv: GKE_TST
+      - clusterId: gke-test-kasha-web
+        clusterEnv: GKE_TST

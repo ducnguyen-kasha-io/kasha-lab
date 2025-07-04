@@ -1,0 +1,24 @@
+{{- define "tpl-notificationPolicies" -}}
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaNotificationPolicy
+metadata:
+  name: kasha-ms-teams
+  namespace: {{ .Release.Namespace }}
+spec:
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
+  route:
+    receiver: grafana-default-email
+    group_by:
+        - alertname
+        - cluster
+    routes:
+{{- range $contactPoint := .Values.grafana.provision.contactPoints }}
+      - receiver: {{ $contactPoint.contactId }}
+        object_matchers:
+{{- range $matcher := $contactPoint.alertMatchers }}
+          - {{ $matcher | toJson }}
+{{- end }}
+{{- end }}
+{{- end -}}

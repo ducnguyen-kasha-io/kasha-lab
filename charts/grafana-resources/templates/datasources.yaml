@@ -1,3 +1,1 @@
-{{- if .Values.grafana.provision.datasources.enabled }}
 {{ include "tpl-datasources" . }}
-{{- end }}

@@ -1,3 +1,7 @@
 {{ .Files.Get "files/notificationTemplate.kasha.team.message.yaml"  }}
 ---
-{{ .Files.Get "files/notificationTemplate.kasha.team.title.yaml"  }}
+{{ .Files.Get "files/notificationTemplate.kasha.teams.title.yaml"  }}
+---
+{{ include "tpl-contactpoints" . }}
+---
+{{ include "tpl-notificationPolicies" . }}

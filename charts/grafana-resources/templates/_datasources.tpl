@@ -1,8 +1,8 @@
 {{- define "tpl-datasources" -}}
-{{- range $provision := .Values.grafana.provision.datasources.tenantList -}}
+{{- range $datasources := .Values.grafana.provision.datasources -}}
 {{ $secretKeyRef := $.Values.grafana.secretKeyRef }}
-{{ $clusterId := $provision.clusterId }}
-{{ $clusterEnv := $provision.clusterEnv }}
+{{ $clusterId := $datasources.clusterId }}
+{{ $clusterEnv := $datasources.clusterEnv }}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:

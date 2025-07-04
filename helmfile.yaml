@@ -85,6 +85,13 @@ releases:
     inherit:
       - template: default
 
+  - name: grafana-resources
+    namespace: observability
+    chart: charts/grafana-resources
+    version: 0.1.0
+    inherit:
+      - template: default
+
   - name: secrets-reloader
     namespace: external-secrets
     chart: stakater/reloader
