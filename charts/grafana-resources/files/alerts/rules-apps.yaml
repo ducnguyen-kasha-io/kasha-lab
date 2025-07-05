@@ -1,0 +1,166 @@
+apiVersion: 1
+groups:
+{{- range $provision := .Values.grafana.provision.datasources.tenantList -}}
+{{ $orgId := $provision.orgId }}
+  - folder: {{ printf "%s" $orgId }}
+    interval: 1m
+    name: Twake Workplace
+    orgId: 1
+    rules:
+      - title: Twake Drive object storage
+        uid: {{ printf "TwakeDrive-%s" $orgId | trunc 40 }}
+        annotations:
+          summary: Twake Drive object storage alerts
+        condition: C
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: {{ printf "logs-%s" $orgId }}
+            model:
+              datasource:
+                  type: loki
+                  uid: {{ printf "logs-%s" $orgId }}
+              editorMode: code
+              expr: sum by(err_type, err_storageId) (rate({container="tdrive-backend", app="tdrive"} | json | level = `ERROR` | err_path !~ `.*/thumbnails/.*` | err_type =~ `OneOfStorageWriteOneFailedException|OneOfStorageReadOneFailedException|WriteFileException|ReadFileException` [5m]))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              queryType: range
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                  - evaluator:
+                      params: []
+                      type: gt
+                    operator:
+                      type: and
+                    query:
+                      params:
+                          - B
+                    reducer:
+                      params: []
+                      type: last
+                    type: query
+              datasource:
+                  type: __expr__
+                  uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                  - evaluator:
+                      params:
+                          - 0
+                      type: gt
+                    operator:
+                      type: and
+                    query:
+                      params:
+                          - C
+                    reducer:
+                      params: []
+                      type: last
+                    type: query
+              datasource:
+                  type: __expr__
+                  uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: Error
+        labels: {}
+        isPaused: false
+      - title: Twake Mail object storage
+        uid: {{ printf "TwakeMail-%s" $orgId | trunc 40 }}
+        annotations:
+          summary: "Twake Mail object storage alerts"
+          description: ""
+        condition: C
+        data:
+          - refId: A
+            queryType: range
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: {{ printf "logs-%s" $orgId }}
+            model:
+              datasource:
+                type: loki
+                uid: {{ printf "logs-%s" $orgId }}
+              editorMode: code
+              expr: sum by(logger, level, message) (rate({app="tmail"} |= `org.apache.james.blob.api.ObjectStoreException` | json [5m]))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              queryType: range
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                  - evaluator:
+                      params: []
+                      type: gt
+                    operator:
+                      type: and
+                    query:
+                      params:
+                          - B
+                    reducer:
+                      params: []
+                      type: last
+                    type: query
+              datasource:
+                  type: __expr__
+                  uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                  - evaluator:
+                      params:
+                          - 0
+                      type: gt
+                    operator:
+                      type: and
+                    query:
+                      params:
+                          - C
+                    reducer:
+                      params: []
+                      type: last
+                    type: query
+              datasource:
+                  type: __expr__
+                  uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: Error
+        # Period during which the threshold condition must be met to trigger an alert.
+        # Triggers the alert immediately once the condition is met.
+        # for: 5m
+        isPaused: false
+        labels: {}
+{{- end }}

@@ -11,8 +11,7 @@ metadata:
 spec:
   uid: {{ printf "metrics-%s" $clusterId }}
   instanceSelector:
-    matchLabels:
-      datasource: "grafana"
+{{ toYaml $.Values.grafana.instanceSelector | indent 4 }}
   valuesFrom:
     - targetPath: "basicAuthUser"
       valueFrom:
@@ -59,8 +58,7 @@ metadata:
 spec:
   uid: {{ printf "logs-%s" $clusterId }}
   instanceSelector:
-    matchLabels:
-      datasource: "grafana"
+{{ toYaml $.Values.grafana.instanceSelector | indent 4 }}
   valuesFrom:
     - targetPath: "basicAuthUser"
       valueFrom:

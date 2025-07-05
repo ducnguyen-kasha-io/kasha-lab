@@ -6,8 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   instanceSelector:
-    matchLabels:
-      datasource: "grafana"
+{{ toYaml $.Values.grafana.instanceSelector | indent 4 }}
   route:
     receiver: grafana-default-email
     group_by:

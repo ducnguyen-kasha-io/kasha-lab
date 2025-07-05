@@ -1,5 +1,8 @@
 grafana:
   secretKeyRef: grafana-secrets-v2
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
   provision:
     contactPoints:
       - contactId: kasha-team-prd-alerts

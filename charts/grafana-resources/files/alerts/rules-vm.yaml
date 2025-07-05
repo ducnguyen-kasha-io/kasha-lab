@@ -1,0 +1,248 @@
+apiVersion: 1
+groups:
+{{- range $provision := .Values.grafana.provision.datasources.tenantList -}}
+{{ $orgId := $provision.orgId }}
+  - folder: {{ printf "%s" $orgId }}
+    interval: 1m
+    name: VMs
+    orgId: 1
+    rules:
+      - title: CPU
+        # UID must not longer than 40 symbols
+        uid: {{ printf "HostOutOfMemory-%s" $orgId | trunc 40 }}
+        annotations:
+          summary: "{{`{{ $labels.nodename }}`}} has less than 20% CPU"
+          description: "Host out of CPU"
+        condition: B
+        data:
+          - datasourceUid: {{ printf "metrics-%s" $orgId }}
+            model:
+              datasource:
+                type: prometheus
+                uid: {{ printf "metrics-%s" $orgId }}
+              editorMode: code
+              expr: 100 - (avg by (nodename) (rate(node_cpu_seconds_total{mode="idle"}[5m]) * on(instance) group_left(nodename) node_uname_info) * 100)
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+            refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+          - datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 75
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+            refId: B
+            relativeTimeRange:
+              from: 600
+              to: 0
+        execErrState: Error
+        for: 5m
+        isPaused: false
+        labels: {}
+        noDataState: OK
+      - title: HostOutOfMemory
+        # UID must not longer than 40 symbols
+        uid: {{ printf "HostOutOfMemory-%s" $orgId | trunc 40 }}
+        annotations:
+          summary: "{{`{{ $labels.nodename }}`}} has less than 25% memory"
+          description: "Host out of memory"
+        condition: B
+        data:
+          - datasourceUid: {{ printf "metrics-%s" $orgId }}
+            model:
+              datasource:
+                type: prometheus
+                uid: {{ printf "metrics-%s" $orgId }}
+              editorMode: code
+              expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 ) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+            refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+          - datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 25
+                    type: lt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+            refId: B
+            relativeTimeRange:
+              from: 600
+              to: 0
+        execErrState: Error
+        for: 5m
+        isPaused: false
+        labels: {}
+        noDataState: OK
+      - title: HostOutOfDiskSpace
+        uid: {{ printf "HostOutOfDiskSpace-%s" $orgId | trunc 40 }}
+        annotations:
+          summary: "{{`{{ $labels.nodename }}`}} has less than 20% disk space for {{`{{ $labels.mountpoint }}`}}"
+          description: "Host out of disk space"
+        condition: B
+        data:
+          - datasourceUid: {{ printf "metrics-%s" $orgId }}
+            model:
+              datasource:
+                type: prometheus
+                uid: {{ printf "metrics-%s" $orgId }}
+              disableTextWrap: false
+              editorMode: code
+              expr: 100 - (node_filesystem_size_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"}-node_filesystem_free_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"}) *100/(node_filesystem_avail_bytes {fstype=~"ext.*|xfs",mountpoint !~".*pod.*"}+(node_filesystem_size_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"}-node_filesystem_free_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"})) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+              fullMetaSearch: false
+              includeNullMetadata: true
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+              useBackend: false
+            refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+          - datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 20
+                    type: lt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+            refId: B
+            relativeTimeRange:
+              from: 600
+              to: 0
+        execErrState: Error
+        for: 5m
+        isPaused: false
+        labels: {}
+        noDataState: OK
+      - title: ServiceNotRunning
+        uid: {{ printf "ServiceNotRunning-%s" $orgId | trunc 40 }}
+        annotations:
+          summary: "{{`{{ $labels.name }}`}} is not running in {{`{{ $labels.nodename }}`}}"
+          description: "Service is not running"
+        condition: B
+        data:
+          - datasourceUid: {{ printf "metrics-%s" $orgId }}
+            model:
+              datasource:
+                type: prometheus
+                uid: {{ printf "metrics-%s" $orgId }}
+              disableTextWrap: false
+              editorMode: code
+              expr: sum by (instance,name) (node_systemd_unit_state{name=~"cassandra.service|mongod.service|opensearch.service|postfix.service|docker.service", state!~"active"})* on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+              fullMetaSearch: false
+              includeNullMetadata: true
+              instant: true
+              intervalMs: 1000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+              useBackend: false
+            refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+          - datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+            refId: B
+            relativeTimeRange:
+              from: 600
+              to: 0
+        execErrState: Error
+        for: 5m
+        isPaused: false
+        labels: {}
+        noDataState: OK
+{{- end -}}

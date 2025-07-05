@@ -12,8 +12,7 @@ spec:
   uid: {{ printf "%s" $contactId }}
   type: teams
   instanceSelector:
-    matchLabels:
-      datasource: "grafana"
+{{ toYaml $.Values.grafana.instanceSelector | indent 4 }}
   settings:
     message: '{{`{{ template "kasha.teams.message" . }}`}}'
     title: '{{`{{ template "kasha.teams.title" . }}`}}'

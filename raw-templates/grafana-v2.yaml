@@ -57,3 +57,24 @@ spec:
       # from_name: Grafana Kasha
       # user: "${SMTP_USERNAME}"
       # password: "${SMTP_PASSWORD}"
+  # deployment:
+  #   spec:
+  #     template:
+  #       spec:
+  #         containers:
+  #           - name: grafana
+  #             readinessProbe:
+  #               failureThreshold: 3
+  #         volumes:
+  #           - name: grafana-data
+  #             persistentVolumeClaim:
+  #               claimName: grafana-pvc
+  #     strategy:
+  #       type: Recreate
+  # persistentVolumeClaim:
+  #   spec:
+  #     accessModes:
+  #       - ReadWriteOnce
+  #     resources:
+  #       requests:
+  #         storage: 10Gi
