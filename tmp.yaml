@@ -1,0 +1,2278 @@
+WARNING: both 'platformCommand' and 'command' are set in "/home/fiery/.local/share/helm/plugins/helm-secrets/plugin.yaml" (this will become an error in a future Helm version)
+WARNING: both 'platformCommand' and 'command' are set in "/home/fiery/.local/share/helm/plugins/helm-secrets/plugin.yaml" (this will become an error in a future Helm version)
+---
+# Source: grafana-resources/templates/dashboards.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: a
+data:
+  dashboard.json: |
+    {
+      "__inputs": [
+        {
+          "name": "DS_METRICS-GKE-PROD-KASHA",
+          "label": "metrics-gke-prod-kasha",
+          "description": "",
+          "type": "datasource",
+          "pluginId": "prometheus",
+          "pluginName": "Prometheus"
+        }
+      ],
+      "__elements": {},
+      "__requires": [
+        {
+          "type": "panel",
+          "id": "bargauge",
+          "name": "Bar gauge",
+          "version": ""
+        },
+        {
+          "type": "grafana",
+          "id": "grafana",
+          "name": "Grafana",
+          "version": "11.6.0"
+        },
+        {
+          "type": "datasource",
+          "id": "prometheus",
+          "name": "Prometheus",
+          "version": "1.0.0"
+        },
+        {
+          "type": "panel",
+          "id": "stat",
+          "name": "Stat",
+          "version": ""
+        },
+        {
+          "type": "panel",
+          "id": "table",
+          "name": "Table",
+          "version": ""
+        },
+        {
+          "type": "panel",
+          "id": "timeseries",
+          "name": "Time series",
+          "version": ""
+        }
+      ],
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "description": "Blackbox exporter HTTP dashboard",
+      "editable": false,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 14,
+          "panels": [],
+          "title": "HTTP Probe Overview",
+          "type": "row"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 5,
+            "x": 0,
+            "y": 1
+          },
+          "id": 11,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "count(probe_success == 1)",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Success",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "left",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "semi-dark-green"
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "HTTP Status"
+                },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green"
+                        },
+                        {
+                          "color": "semi-dark-red",
+                          "value": 0
+                        },
+                        {
+                          "color": "semi-dark-green",
+                          "value": 200
+                        },
+                        {
+                          "color": "semi-dark-red",
+                          "value": 400
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 115
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "match": "null",
+                          "result": {
+                            "color": "transparent",
+                            "index": 0,
+                            "text": "None"
+                          }
+                        },
+                        "type": "special"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "监控实例地址"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 365
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Certificate Expired In"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 164
+                  },
+                  {
+                    "id": "unit",
+                    "value": "dtdurations"
+                  },
+                  {
+                    "id": "noValue",
+                    "value": "非 HTTPS 协议"
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "transparent"
+                        },
+                        {
+                          "color": "semi-dark-red",
+                          "value": 1
+                        },
+                        {
+                          "color": "#EAB839",
+                          "value": 2592000
+                        },
+                        {
+                          "color": "semi-dark-green",
+                          "value": 2592011
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Certificate Expired Date"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "dateTimeAsIso"
+                  },
+                  {
+                    "id": "noValue",
+                    "value": "非 HTTPS 协议"
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "transparent"
+                        },
+                        {
+                          "color": "semi-dark-blue",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 193
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Response Time"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 128
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "semi-dark-green"
+                        },
+                        {
+                          "color": "#EAB839",
+                          "value": 1.5
+                        },
+                        {
+                          "color": "semi-dark-red",
+                          "value": 3
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "unit",
+                    "value": "s"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "DNS Query Time"
+                },
+                "properties": [
+                  {
+                    "id": "decimals",
+                    "value": 6
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 152
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "semi-dark-green"
+                        },
+                        {
+                          "color": "semi-dark-yellow",
+                          "value": 1.5
+                        },
+                        {
+                          "color": "semi-dark-red",
+                          "value": 3
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "unit",
+                    "value": "s"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Status"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 66
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "red",
+                            "index": 1,
+                            "text": "DOWN"
+                          },
+                          "1": {
+                            "color": "green",
+                            "index": 0,
+                            "text": "UP"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "TLS v1.2"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "1": {
+                            "index": 0,
+                            "text": "√"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.minWidth",
+                    "value": 50
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "TLS v1.3"
+                },
+                "properties": [
+                  {
+                    "id": "custom.minWidth",
+                    "value": 40
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "1": {
+                            "index": 0,
+                            "text": "√"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "URLs"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 234
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 19,
+            "x": 5,
+            "y": 1
+          },
+          "id": 9,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "URLs"
+              }
+            ]
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_http_status_code",
+              "format": "table",
+              "legendFormat": "",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_ssl_earliest_cert_expiry - time()",
+              "format": "table",
+              "hide": false,
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_ssl_earliest_cert_expiry * 1000",
+              "format": "table",
+              "hide": false,
+              "range": true,
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_duration_seconds",
+              "format": "table",
+              "hide": false,
+              "range": true,
+              "refId": "D"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_dns_lookup_time_seconds",
+              "format": "table",
+              "hide": false,
+              "range": true,
+              "refId": "E"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_success",
+              "format": "table",
+              "hide": false,
+              "range": true,
+              "refId": "F"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "probe_tls_version_info{ version=~\".*.1\"}",
+              "format": "table",
+              "hide": false,
+              "instant": false,
+              "legendFormat": "",
+              "range": true,
+              "refId": "G"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_tls_version_info{version=~\".*.2\"}",
+              "format": "table",
+              "hide": false,
+              "range": true,
+              "refId": "H"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "probe_tls_version_info{version=~\".*.3\"}",
+              "format": "table",
+              "hide": false,
+              "range": true,
+              "refId": "I"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "names": [
+                    "instance",
+                    "Value #A",
+                    "Value #B",
+                    "Value #C",
+                    "Value #D",
+                    "Value #E",
+                    "Value #F",
+                    "Value #H",
+                    "Value #I"
+                  ]
+                }
+              }
+            },
+            {
+              "id": "seriesToColumns",
+              "options": {
+                "byField": "instance"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Value #I": true
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Value #A": 4,
+                  "Value #B": 5,
+                  "Value #C": 6,
+                  "Value #D": 2,
+                  "Value #E": 3,
+                  "Value #F": 1,
+                  "instance": 0
+                },
+                "renameByName": {
+                  "Value #A": "HTTP Status",
+                  "Value #B": "Certificate Expired In",
+                  "Value #C": "Certificate Expired Date",
+                  "Value #D": "Response Time",
+                  "Value #E": "DNS Query Time",
+                  "Value #F": "Status",
+                  "Value #G": "TLS 版本 v1.2",
+                  "Value #H": "TLS v1.2",
+                  "Value #I": "TLS v1.3",
+                  "instance": "URLs"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "red",
+                "mode": "fixed"
+              },
+              "mappings": [
+                {
+                  "options": {
+                    "match": "null",
+                    "result": {
+                      "index": 0,
+                      "text": "0"
+                    }
+                  },
+                  "type": "special"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 5,
+            "x": 0,
+            "y": 6
+          },
+          "id": 12,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "count(probe_success== 0)",
+              "hide": false,
+              "instant": true,
+              "range": false,
+              "refId": "A"
+            }
+          ],
+          "title": "Fail",
+          "type": "stat"
+        },
+        {
+          "collapsed": false,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 11
+          },
+          "id": 15,
+          "panels": [],
+          "title": "HTTP Probe Details",
+          "type": "row"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "green",
+                "mode": "fixed"
+              },
+              "decimals": 3,
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent"
+                  },
+                  {
+                    "color": "red",
+                    "value": 0
+                  },
+                  {
+                    "color": "orange",
+                    "value": 95
+                  },
+                  {
+                    "color": "green",
+                    "value": 99
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 12
+          },
+          "id": 13,
+          "options": {
+            "displayMode": "lcd",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 10,
+            "minVizWidth": 0,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "avg_over_time(probe_success{}[24h]) * 100 ",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{instance}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "System Uptime - Last 24h",
+          "transformations": [
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "https://(.*)",
+                "renamePattern": "$1"
+              }
+            }
+          ],
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+          },
+          "description": "Returns how long the probe took to complete in seconds",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 500
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 22
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+              },
+              "editorMode": "code",
+              "expr": "sum(probe_http_duration_seconds{instance=~\"$instance\"}) by (instance)",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "{{ instance }}",
+              "refId": "A"
+            }
+          ],
+          "title": "HTTP Probe Duration",
+          "type": "timeseries"
+        }
+      ],
+      "refresh": "1m",
+      "schemaVersion": 41,
+      "tags": [],
+      "templating": {
+        "list": [
+          {
+            "allowCustomValue": false,
+            "current": {},
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            },
+            "definition": "label_values(probe_success,instance)",
+            "hide": 2,
+            "includeAll": true,
+            "label": "Instance",
+            "multi": true,
+            "name": "instance",
+            "options": [],
+            "query": {
+              "qryType": 1,
+              "query": "label_values(probe_success,instance)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            },
+            "refresh": 1,
+            "regex": "",
+            "type": "query"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-3h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "[Screen 1] - HTTP Health Check",
+      "uid": "http-health-check",
+      "version": 1,
+      "weekStart": ""
+    }
+---
+# Source: grafana-resources/templates/alerts.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaContactPoint
+metadata:
+  name: kasha-team-prd-alerts
+  namespace: observability
+spec:
+  name: kasha-team-prd-alerts
+  uid: kasha-team-prd-alerts
+  type: teams
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  settings:
+    message: '{{ template "kasha.teams.message" . }}'
+    title: '{{ template "kasha.teams.title" . }}'
+    url: https://kashaglobalholdinglimited.webhook.office.com/webhookb2/7f9a9209-4e9f-4538-a968-185887a64cfd@01599455-31f6-4698-812b-887ffb90c9c9/IncomingWebhook/56db33f180ea456594394b44a702a272/88fd40bf-4656-401d-b39b-3741bc13a446/V27sWqbFBYa6zktfFNxZpyGZJsJ0T32ThiVZGDJhzDvoA1
+---
+# Source: grafana-resources/templates/alerts.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaContactPoint
+metadata:
+  name: kasha-team-non-prd-alerts
+  namespace: observability
+spec:
+  name: kasha-team-non-prd-alerts
+  uid: kasha-team-non-prd-alerts
+  type: teams
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  settings:
+    message: '{{ template "kasha.teams.message" . }}'
+    title: '{{ template "kasha.teams.title" . }}'
+    url: https://kashaglobalholdinglimited.webhook.office.com/webhookb2/7f9a9209-4e9f-4538-a968-185887a64cfd@01599455-31f6-4698-812b-887ffb90c9c9/IncomingWebhook/0e6461d89d9d489899ab6e4d10f9e43a/88fd40bf-4656-401d-b39b-3741bc13a446/V2phJ2WTm5j07j5KVPhZ29JIIeyRii3_Qwfi1kdQ9_2zQ1
+---
+# Source: grafana-resources/templates/dashboards.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: a
+spec:
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  configMapRef:
+    name: b
+    key: dashboard.json
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-prod-bastion-kasha
+  namespace: observability
+spec:
+  uid: metrics-prod-bastion-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_BASTION_PRD"
+  datasource:
+    name: metrics-prod-bastion-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_BASTION_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-prod-bastion-kasha
+  namespace: observability
+spec:
+  uid: logs-prod-bastion-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_BASTION_PRD"
+  datasource:
+    name: logs-prod-bastion-kasha
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_BASTION_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-non-prod-bastion-kasha
+  namespace: observability
+spec:
+  uid: metrics-non-prod-bastion-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_BASTION_NON_PRD"
+  datasource:
+    name: metrics-non-prod-bastion-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_BASTION_NON_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-non-prod-bastion-kasha
+  namespace: observability
+spec:
+  uid: logs-non-prod-bastion-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_BASTION_NON_PRD"
+  datasource:
+    name: logs-non-prod-bastion-kasha
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_BASTION_NON_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-dev-kasha
+  namespace: observability
+spec:
+  uid: metrics-gke-dev-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_DEV"
+  datasource:
+    name: metrics-gke-dev-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_DEV}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-dev-kasha
+  namespace: observability
+spec:
+  uid: logs-gke-dev-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_DEV"
+  datasource:
+    name: logs-gke-dev-kasha
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_DEV}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-dev-kasha-web
+  namespace: observability
+spec:
+  uid: metrics-gke-dev-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_DEV"
+  datasource:
+    name: metrics-gke-dev-kasha-web
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_DEV}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-dev-kasha-web
+  namespace: observability
+spec:
+  uid: logs-gke-dev-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_DEV"
+  datasource:
+    name: logs-gke-dev-kasha-web
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_DEV}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-staging-kasha
+  namespace: observability
+spec:
+  uid: metrics-gke-staging-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_STG"
+  datasource:
+    name: metrics-gke-staging-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_STG}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-staging-kasha
+  namespace: observability
+spec:
+  uid: logs-gke-staging-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_STG"
+  datasource:
+    name: logs-gke-staging-kasha
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_STG}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-staging-kasha-web
+  namespace: observability
+spec:
+  uid: metrics-gke-staging-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_STG"
+  datasource:
+    name: metrics-gke-staging-kasha-web
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_STG}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-staging-kasha-web
+  namespace: observability
+spec:
+  uid: logs-gke-staging-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_STG"
+  datasource:
+    name: logs-gke-staging-kasha-web
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_STG}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-prod-kasha
+  namespace: observability
+spec:
+  uid: metrics-gke-prod-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_PRD"
+  datasource:
+    name: metrics-gke-prod-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-prod-kasha
+  namespace: observability
+spec:
+  uid: logs-gke-prod-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_PRD"
+  datasource:
+    name: logs-gke-prod-kasha
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-prod-kasha-web
+  namespace: observability
+spec:
+  uid: metrics-gke-prod-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_PRD"
+  datasource:
+    name: metrics-gke-prod-kasha-web
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-prod-kasha-web
+  namespace: observability
+spec:
+  uid: logs-gke-prod-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_PRD"
+  datasource:
+    name: logs-gke-prod-kasha-web
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_PRD}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-test-kasha
+  namespace: observability
+spec:
+  uid: metrics-gke-test-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_TST"
+  datasource:
+    name: metrics-gke-test-kasha
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_TST}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-test-kasha
+  namespace: observability
+spec:
+  uid: logs-gke-test-kasha
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_TST"
+  datasource:
+    name: logs-gke-test-kasha
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_TST}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: metrics-gke-test-kasha-web
+  namespace: observability
+spec:
+  uid: metrics-gke-test-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "MIMIR_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_TST"
+  datasource:
+    name: metrics-gke-test-kasha-web
+    type: prometheus
+    access: proxy
+    url: https://mimir.kasha.io/prometheus
+    basicAuth: true
+    basicAuthUser: "${MIMIR_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      prometheusType: Mimir
+      prometheusVersion: 2.9.1
+      disableRecordingRules: true
+      httpHeaderName1: X-Scope-OrgID
+      httpMethod: POST
+      manageAlerts: false
+      oauthPassThru: false
+      sigV4Auth: false
+    secureJsonData:
+      basicAuthPassword: "${MIMIR_PASSWORD}"
+      httpHeaderValue1: "${GKE_TST}"
+---
+# Source: grafana-resources/templates/datasources.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: logs-gke-test-kasha-web
+  namespace: observability
+spec:
+  uid: logs-gke-test-kasha-web
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  valuesFrom:
+    - targetPath: "basicAuthUser"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_USERNAME"
+    - targetPath: "secureJsonData.basicAuthPassword"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "LOKI_PASSWORD"
+    - targetPath: "secureJsonData.httpHeaderValue1"
+      valueFrom:
+        secretKeyRef:
+          name: "grafana-secrets-v2"
+          key: "GKE_TST"
+  datasource:
+    name: logs-gke-test-kasha-web
+    type: loki
+    access: proxy
+    url: https://loki.kasha.io
+    basicAuth: true
+    basicAuthUser: "${LOKI_USERNAME}"
+    isDefault: false
+    readOnly: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      basicAuthPassword: "${LOKI_PASSWORD}"
+      httpHeaderValue1: "${GKE_TST}"
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: alerts
+spec:
+  title: ALERTS
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: dashboards
+spec:
+  title: DASHBOARDS
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: prod-bastion-kasha
+spec:
+  title: prod-bastion-kasha
+  uid: prod-bastion-kasha
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: non-prod-bastion-kasha
+spec:
+  title: non-prod-bastion-kasha
+  uid: non-prod-bastion-kasha
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-dev-kasha
+spec:
+  title: gke-dev-kasha
+  uid: gke-dev-kasha
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-dev-kasha-web
+spec:
+  title: gke-dev-kasha-web
+  uid: gke-dev-kasha-web
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-staging-kasha
+spec:
+  title: gke-staging-kasha
+  uid: gke-staging-kasha
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-staging-kasha-web
+spec:
+  title: gke-staging-kasha-web
+  uid: gke-staging-kasha-web
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-prod-kasha
+spec:
+  title: gke-prod-kasha
+  uid: gke-prod-kasha
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-prod-kasha-web
+spec:
+  title: gke-prod-kasha-web
+  uid: gke-prod-kasha-web
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-test-kasha
+spec:
+  title: gke-test-kasha
+  uid: gke-test-kasha
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/folders.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: gke-test-kasha-web
+spec:
+  title: gke-test-kasha-web
+  uid: gke-test-kasha-web
+  parentFolderRef: alerts
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+---
+# Source: grafana-resources/templates/alerts.yaml
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaNotificationPolicy
+metadata:
+  name: kasha-ms-teams
+  namespace: observability
+spec:
+  instanceSelector:
+    matchLabels:
+      datasource: grafana
+  route:
+    receiver: grafana-default-email
+    group_by:
+        - alertname
+        - cluster
+    routes:
+      - receiver: kasha-team-prd-alerts
+        object_matchers:
+          - ["cluster","=","gke-prod-kasha"]
+          - ["priority","=~","P0|P1"]
+      - receiver: kasha-team-non-prd-alerts
+        object_matchers:
+          - ["cluster","!~","gke-prod-kasha"]
+          - ["priority","=~","P0|P1"]
+---
+# Source: grafana-resources/templates/alerts.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaNotificationTemplate
+metadata:
+  name: kasha.teams.message
+spec:
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
+  name: kasha.teams.message
+  template: |
+    {{ define "kasha.teams.message" }}
+    {{ range .Alerts }}
+
+      {{ if .Annotations }}
+        {{ range .Annotations.SortedPairs }}
+          {{ .Name }}: {{ .Value }}
+        {{ end }}
+      {{ end }}
+
+      {{- with (index .Labels "priority") }}
+        {{- if eq . "P0" }}
+          **Critical system failure. Please response immediately!**
+        {{- end }}
+        {{- if eq . "P1" }}
+          **Major functionality failure. Please response within 30 minutes**
+        {{- end }}
+      {{- end }}
+
+      - **Priority:** {{ index .Labels "priority" }}
+      - **Service Owner:** {{ or (index .Labels "owner") "Not Assigned" }}
+      - **Kubernetes Cluster:** {{ index .Labels "cluster" }}
+
+      {{- if or (eq .Labels.alertname "RedisDown") (eq .Labels.alertname "RabbitmqDown") (eq .Labels.alertname "MinioDown") }}
+        - **Namespace:** {{ index .Labels "namespace" }}
+      {{ end }}
+
+      {{- if eq .Labels.alertname "ClientWebsiteNotReady" }}
+        - **Website Deployment:** {{ index .Labels "deployment" }}
+      {{ end }}
+
+      {{- if eq .Labels.alertname "KashaServiceNotReady" }}
+        - **Name:** {{ index .Labels "exported_service" }}
+      {{ end }}
+
+    {{ end }}
+    {{ end }}
+---
+# Source: grafana-resources/templates/alerts.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaNotificationTemplate
+metadata:
+  name: kasha.teams.title
+spec:
+  instanceSelector:
+    matchLabels:
+      datasource: "grafana"
+  name: kasha.teams.title
+  template: |
+      {{ define "kasha.teams.title" }}
+      [{{ .Status | toUpper }}] {{ len .Alerts }} instance(s) of {{ if gt (len .Alerts) 0 }}{{ (index .Alerts 0).Labels.alertname }}{{ else }}No Alerts{{ end }}
+      {{ end }}
+
