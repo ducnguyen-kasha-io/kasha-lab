@@ -90,7 +90,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+        "uid": "metrics-prod-bastion-kasha"
       },
       "fieldConfig": {
         "defaults": {
@@ -145,7 +145,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+            "uid": "metrics-prod-bastion-kasha"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -165,7 +165,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+        "uid": "metrics-prod-bastion-kasha"
       },
       "fieldConfig": {
         "defaults": {
@@ -223,7 +223,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+            "uid": "metrics-prod-bastion-kasha"
           },
           "editorMode": "code",
           "expr": "time()-openvpn_status_update_time_seconds",
@@ -239,7 +239,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+        "uid": "metrics-prod-bastion-kasha"
       },
       "fieldConfig": {
         "defaults": {
@@ -404,7 +404,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+            "uid": "metrics-prod-bastion-kasha"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -464,7 +464,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+        "uid": "metrics-prod-bastion-kasha"
       },
       "fieldConfig": {
         "defaults": {
@@ -540,7 +540,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-PROD-BASTION-KASHA}"
+            "uid": "metrics-prod-bastion-kasha"
           },
           "expr": "topk(6, sum(increase(openvpn_server_client_received_bytes_total{common_name!=\"UNDEF\"}[1d])+increase(openvpn_server_client_sent_bytes_total{common_name!=\"UNDEF\"}[1d]))by(common_name))",
           "format": "time_series",

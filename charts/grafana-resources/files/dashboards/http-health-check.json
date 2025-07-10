@@ -87,7 +87,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+        "uid": "metrics-gke-prod-kasha"
       },
       "fieldConfig": {
         "defaults": {
@@ -139,7 +139,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "count(probe_success == 1)",
@@ -153,7 +153,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+        "uid": "metrics-gke-prod-kasha"
       },
       "fieldConfig": {
         "defaults": {
@@ -564,7 +564,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_http_status_code",
@@ -576,7 +576,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_ssl_earliest_cert_expiry - time()",
@@ -588,7 +588,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_ssl_earliest_cert_expiry * 1000",
@@ -600,7 +600,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_duration_seconds",
@@ -612,7 +612,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_dns_lookup_time_seconds",
@@ -624,7 +624,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_success",
@@ -636,7 +636,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -651,7 +651,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_tls_version_info{version=~\".*.2\"}",
@@ -663,7 +663,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "probe_tls_version_info{version=~\".*.3\"}",
@@ -734,7 +734,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+        "uid": "metrics-gke-prod-kasha"
       },
       "fieldConfig": {
         "defaults": {
@@ -795,7 +795,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -825,7 +825,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+        "uid": "metrics-gke-prod-kasha"
       },
       "description": "",
       "fieldConfig": {
@@ -898,7 +898,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -926,7 +926,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+        "uid": "metrics-gke-prod-kasha"
       },
       "description": "Returns how long the probe took to complete in seconds",
       "fieldConfig": {
@@ -1009,7 +1009,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+            "uid": "metrics-gke-prod-kasha"
           },
           "editorMode": "code",
           "expr": "sum(probe_http_duration_seconds{instance=~\"$instance\"}) by (instance)",
@@ -1034,7 +1034,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_METRICS-GKE-PROD-KASHA}"
+          "uid": "metrics-gke-prod-kasha"
         },
         "definition": "label_values(probe_success,instance)",
         "hide": 2,
