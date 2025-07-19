@@ -1,4 +1,4 @@
-{{- define "tpl-notificationPolicies" -}}
+{{- define "alert-notification-policy" -}}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaNotificationPolicy
 metadata:

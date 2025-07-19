@@ -26,8 +26,10 @@ grafana:
     datasources:
       - clusterId: prod-bastion-kasha
         clusterEnv: GKE_BASTION_PRD
+        alertEnabled: false
       - clusterId: non-prod-bastion-kasha
         clusterEnv: GKE_BASTION_NON_PRD
+        alertEnabled: false
       ## Application Clusters
       - clusterId: gke-dev-kasha
         clusterEnv: GKE_DEV

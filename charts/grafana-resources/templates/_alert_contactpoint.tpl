@@ -1,4 +1,4 @@
-{{- define "tpl-contactpoints" -}}
+{{- define "alert-contactpoint" -}}
 {{- range $contactPoints := .Values.grafana.provision.contactPoints -}}
 {{ $contactId := $contactPoints.contactId }}
 {{ $contactUrl := $contactPoints.contactUrl }}

@@ -2,6 +2,8 @@
 ---
 {{ .Files.Get "files/notificationTemplate.kasha.teams.title.yaml"  }}
 ---
-{{ include "tpl-contactpoints" . }}
+{{ include "alert-contactpoint" . }}
 ---
-{{ include "tpl-notificationPolicies" . }}
+{{ include "alert-notification-policy" . }}
+---
+{{ include "alert-rule-group" . }}
