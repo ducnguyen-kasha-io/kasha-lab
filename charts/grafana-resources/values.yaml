@@ -3,6 +3,38 @@ grafana:
   instanceSelector:
     matchLabels:
       datasource: "grafana"
+  spec:
+    version: "11.6.3"
+    config:
+      log:
+        mode: "console"
+        level: "info"
+      log.console:
+        format: "json"
+      server:
+        root_url: https://grafana-green.kasha.io
+        enable_gzip: "true"
+      auth:
+        disable_login_form: "false"
+      auth.azuread:
+        enabled: "false"
+        # allow_sign_up: "true"
+        # client_id: "${AZUREAD_CLIENT_ID}"
+        # client_secret: "${AZUREAD_CLIENT_SECRET}"
+        # auth_url: "https://login.microsoftonline.com/01599455-31f6-4698-812b-887ffb90c9c9/oauth2/v2.0/authorize"
+        # token_url: "https://login.microsoftonline.com/01599455-31f6-4698-812b-887ffb90c9c9/oauth2/v2.0/token"
+        # allowed_domains: "kasha.io"
+        # allowed_groups: ""
+        # skip_org_role_sync: "true"
+      # security:
+      #   admin_user: "${ADMIN_USERNAME}"
+      #   admin_password: "${ADMIN_PASSWORD}"
+      #   admin_email: grafana@kasha.io
+      #   disable_initial_admin_creation: "false"
+      smtp:
+        enabled: "false"
+      users:
+        viewers_can_edit: "true"
   provision:
     contactPoints:
       - contactId: kasha-team-prd-alerts
@@ -25,29 +57,26 @@ grafana:
             - P0|P1
     datasources:
       - clusterId: prod-bastion-kasha
-        clusterEnv: GKE_BASTION_PRD
       - clusterId: non-prod-bastion-kasha
-        clusterEnv: GKE_BASTION_NON_PRD
       ## Application Clusters
       - clusterId: gke-dev-kasha
-        clusterEnv: GKE_DEV
         alertEnabled: true
       # - clusterId: gke-dev-kasha-web
-      #   clusterEnv: GKE_DEV
       #   alertEnabled: true
       - clusterId: gke-staging-kasha
-        clusterEnv: GKE_STG
         alertEnabled: true
       # - clusterId: gke-staging-kasha-web
-      #   clusterEnv: GKE_STG
       #   alertEnabled: true
       - clusterId: gke-prod-kasha
-        clusterEnv: GKE_PRD
         alertEnabled: true
       # - clusterId: gke-prod-kasha-web
-      #   clusterEnv: GKE_PRD
       - clusterId: gke-test-kasha
-        clusterEnv: GKE_TST
         alertEnabled: true
       # - clusterId: gke-test-kasha-web
-      #   clusterEnv: GKE_TST
+
+istioGateway:
+  enabled: false
+  gateways: 
+    - istio-system/ingress
+  hosts:
+    - grafana-green.kasha.io

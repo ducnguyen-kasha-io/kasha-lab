@@ -2,7 +2,6 @@
 {{- range $datasources := .Values.grafana.provision.datasources -}}
 {{ $secretKeyRef := $.Values.grafana.secretKeyRef }}
 {{ $clusterId := $datasources.clusterId }}
-{{ $clusterEnv := $datasources.clusterEnv }}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
@@ -27,7 +26,7 @@ spec:
       valueFrom:
         secretKeyRef:
           name: "{{ printf "%s" $secretKeyRef }}"
-          key: "{{ printf "%s" $clusterEnv }}"
+          key: "{{ printf "%s" $clusterId | replace "-" "_" | upper}}"
   datasource:
     name: {{ printf "metrics-%s" $clusterId }}
     type: prometheus
@@ -48,7 +47,7 @@ spec:
       sigV4Auth: false
     secureJsonData:
       basicAuthPassword: "${MIMIR_PASSWORD}"
-      httpHeaderValue1: "${{ printf "{%s}" $clusterEnv }}"
+      httpHeaderValue1: "${{ printf "{%s}" $clusterId | replace "-" "_" | upper}}"
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
@@ -63,18 +62,18 @@ spec:
     - targetPath: "basicAuthUser"
       valueFrom:
         secretKeyRef:
-          name: "grafana-secrets-v2"
+          name: "{{ printf "%s" $secretKeyRef }}"
           key: "LOKI_USERNAME"
     - targetPath: "secureJsonData.basicAuthPassword"
       valueFrom:
         secretKeyRef:
-          name: "grafana-secrets-v2"
+          name: "{{ printf "%s" $secretKeyRef }}"
           key: "LOKI_PASSWORD"
     - targetPath: "secureJsonData.httpHeaderValue1"
       valueFrom:
         secretKeyRef:
-          name: "grafana-secrets-v2"
-          key: "{{ printf "%s" $clusterEnv }}"
+          name: "{{ printf "%s" $secretKeyRef }}"
+          key: "{{ printf "%s" $clusterId | replace "-" "_" | upper}}"
   datasource:
     name: {{ printf "logs-%s" $clusterId }}
     type: loki
@@ -88,7 +87,7 @@ spec:
       httpHeaderName1: X-Scope-OrgID
     secureJsonData:
       basicAuthPassword: "${LOKI_PASSWORD}"
-      httpHeaderValue1: "${{ printf "{%s}" $clusterEnv }}"
+      httpHeaderValue1: "${{ printf "{%s}" $clusterId | replace "-" "_" | upper}}"
 ---
 {{- end -}}
 {{- end -}}

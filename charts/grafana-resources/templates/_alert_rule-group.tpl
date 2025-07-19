@@ -2,7 +2,6 @@
 {{- $root := . -}}
 {{- range $datasources := .Values.grafana.provision.datasources -}}
 {{ $clusterId := $datasources.clusterId }}
-{{ $clusterEnv := $datasources.clusterEnv }}
 {{ $alertEnabled := $datasources.alertEnabled }}
 {{- if eq $alertEnabled true }}
 apiVersion: grafana.integreatly.org/v1beta1
