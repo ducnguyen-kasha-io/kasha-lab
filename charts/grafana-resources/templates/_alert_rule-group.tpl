@@ -1,33 +1,43 @@
 {{- define "alert-rule-group" -}}
+{{- $root := . -}}
 {{- range $datasources := .Values.grafana.provision.datasources -}}
 {{ $clusterId := $datasources.clusterId }}
 {{ $clusterEnv := $datasources.clusterEnv }}
 {{ $alertEnabled := $datasources.alertEnabled }}
-{{- if ne $alertEnabled false }}
+{{- if eq $alertEnabled true }}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaAlertRuleGroup
 metadata:
   name: {{ printf "%s" $clusterId }}
-  namespace: {{ $.Release.Namespace }}
+  namespace: {{ $root.Release.Namespace }}
 spec:
   folderRef: {{ printf "%s" $clusterId }}
   instanceSelector:
-{{ toYaml $.Values.grafana.instanceSelector | indent 4 }}
+{{ toYaml $root.Values.grafana.instanceSelector | indent 4 }}
   interval: 5m
   rules:
-    - uid: {{ printf "ClientWebsiteNotReady-%s" $clusterId |  trunc 40 | lower  }}
-      title: ClientWebsiteNotReady
-      condition: C
+{{- /* Load alert rules dynamically from files/alert-rules directory */ -}}
+{{- range $path, $_ := $root.Files.Glob "files/alert-rules/*.yaml" }}
+{{- $alertRules := $root.Files.Get $path | fromYaml }}
+{{- range $alertRules.rules }}
+    - uid: {{ printf "%s-%s" .uid $clusterId | trunc 40 | lower }}
+      title: {{ .title }}
+      condition: {{ .condition }}
       data:
         - refId: A
           relativeTimeRange:
-            from: 600
-            to: 0
+            from: {{ .query.timeRange.from | default 600 }}
+            to: {{ .query.timeRange.to | default 0 }}
           datasourceUid: {{ printf "metrics-%s" $clusterId }}
           model:
+{{- if .query.datasource }}
+            datasource:
+                type: {{ .query.datasource.type }}
+                uid: {{ printf "metrics-%s" $clusterId }}
+{{- end }}
             disableTextWrap: false
-            editorMode: builder
-            expr: max_over_time(kube_pod_container_status_waiting_reason{namespace="deployments"}[10m]) >= bool 1
+            editorMode: {{ .query.editorMode | default "builder" }}
+            expr: {{ .query.expr }}
             fullMetaSearch: false
             includeNullMetadata: true
             instant: true
@@ -37,19 +47,19 @@ spec:
             range: false
             refId: A
             useBackend: false
-        - refId: C
+        - refId: B
           datasourceUid: __expr__
           model:
             conditions:
                 - evaluator:
                     params:
-                        - 0
-                    type: gt
+                        - {{ .threshold.value }}
+                    type: {{ .threshold.operator }}
                   operator:
                     type: and
                   query:
                     params:
-                        - C
+                        - B
                   reducer:
                     params: []
                     type: last
@@ -60,19 +70,23 @@ spec:
             expression: A
             intervalMs: 1000
             maxDataPoints: 43200
-            refId: C
+            refId: B
             type: threshold
-      noDataState: NoData
-      execErrState: Error
-      for: 5m
+      noDataState: {{ .noDataState | default "NoData" }}
+      execErrState: {{ .execErrState | default "Error" }}
+      for: {{ .for }}
       annotations:
-        summary: Client's website is not ready after more than 5 minutes.
+        summary: {{ .annotations.summary }}
       labels:
-        owner: IT Operations
-        priority: P1
-      isPaused: true
-      notificationSettings:
-        receiver: kasha-team-non-prd-alerts
+        owner: {{ .labels.owner }}
+        priority: {{ .labels.priority }}
+      isPaused: {{ .isPaused | default true }}
+{{- if .notification_settings }}
+      notification_settings:
+        receiver: {{ .notification_settings.receiver }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{ end -}}
 ---
 {{- end -}}

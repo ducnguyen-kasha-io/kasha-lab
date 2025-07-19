@@ -26,24 +26,28 @@ grafana:
     datasources:
       - clusterId: prod-bastion-kasha
         clusterEnv: GKE_BASTION_PRD
-        alertEnabled: false
       - clusterId: non-prod-bastion-kasha
         clusterEnv: GKE_BASTION_NON_PRD
-        alertEnabled: false
       ## Application Clusters
       - clusterId: gke-dev-kasha
         clusterEnv: GKE_DEV
-      - clusterId: gke-dev-kasha-web
-        clusterEnv: GKE_DEV
+        alertEnabled: true
+      # - clusterId: gke-dev-kasha-web
+      #   clusterEnv: GKE_DEV
+      #   alertEnabled: true
       - clusterId: gke-staging-kasha
         clusterEnv: GKE_STG
-      - clusterId: gke-staging-kasha-web
-        clusterEnv: GKE_STG
+        alertEnabled: true
+      # - clusterId: gke-staging-kasha-web
+      #   clusterEnv: GKE_STG
+      #   alertEnabled: true
       - clusterId: gke-prod-kasha
         clusterEnv: GKE_PRD
-      - clusterId: gke-prod-kasha-web
-        clusterEnv: GKE_PRD
+        alertEnabled: true
+      # - clusterId: gke-prod-kasha-web
+      #   clusterEnv: GKE_PRD
       - clusterId: gke-test-kasha
         clusterEnv: GKE_TST
-      - clusterId: gke-test-kasha-web
-        clusterEnv: GKE_TST
+        alertEnabled: true
+      # - clusterId: gke-test-kasha-web
+      #   clusterEnv: GKE_TST
