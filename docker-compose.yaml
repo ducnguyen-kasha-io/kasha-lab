@@ -1,0 +1,440 @@
+services:
+    lr-postgres:
+        image: postgres:16.0
+        container_name: lr-postgres
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: 1234qwer
+            POSTGRES_DB: kasha
+        volumes:
+            - postgresdata:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+        networks:
+            - lr-network
+        restart: always
+
+    lr-mongodb:
+        image: mongo:7.0
+        container_name: lr-mongodb
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: 1234qwer
+        volumes:
+            - mongodbdata:/data/db
+        ports:
+            - 27018:27017
+        networks:
+            - lr-network
+        restart: always
+
+    lr-redis:
+        image: redis:7.4.1-alpine
+        container_name: lr-redis
+        ports:
+            - 6379:6379
+        networks:
+            - lr-network
+        restart: always
+
+    lr-rabbitmq:
+        image: rabbitmq:4.0-management
+        container_name: lr-rabbitmq
+        hostname: rabbitmq
+        ports:
+            - 5673:5673
+            - 15673:15672
+        networks:
+            - lr-network
+        restart: always
+        volumes:
+            - lr_rabbitmq_data:/var/lib/rabbitmq
+            - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+            - ./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+
+    lr-elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+        container_name: lr-elasticsearch
+        environment:
+            - discovery.type=single-node
+        ports:
+            - 9200:9200
+            - 9300:9300
+        networks:
+            - lr-network
+        restart: always
+
+    lr-company-service:
+        container_name: lr-company-service
+        image: lr-company-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-company-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-company-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+            - lr-redis
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-company-service/.env
+
+    lr-auth-service:
+        container_name: lr-auth-service
+        image: lr-auth-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-auth-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-auth-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+            - lr-redis
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-auth-service/.env
+
+    lr-crm-service:
+        container_name: lr-crm-service
+        image: lr-crm-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-crm-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-crm-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+            - lr-redis
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-crm-service/.env
+
+    lr-booking-service:
+        container_name: lr-booking-service
+        image: lr-booking-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-booking-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-booking-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-booking-service/.env
+
+    lr-notifications-service:
+        container_name: lr-notifications-service
+        image: lr-notifications-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-notifications-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-notifications-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+            - lr-redis
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-notifications-service/.env
+
+    lr-invoicing-service:
+        container_name: lr-invoicing-service
+        platform: linux/amd64
+        image: lr-invoicing-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-invoicing-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-invoicing-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-invoicing-service/.env
+
+    lr-website-builder-service:
+        container_name: lr-website-builder-service
+        image: lr-website-builder-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-website-builder-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-website-builder-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-mongodb
+            - lr-rabbitmq
+            - lr-redis
+        command: npm run start:dev
+        networks:
+            - lr-network
+
+    lr-banking-service:
+        container_name: lr-banking-service
+        image: lr-banking-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-banking-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-banking-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-banking-service/.env
+
+    lr-workflow-builder-service:
+        container_name: lr-workflow-builder-service
+        image: lr-workflow-builder-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-workflow-builder-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-workflow-builder-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-mongodb
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-workflow-builder-service/.env
+
+    lr-integrations-service:
+        container_name: lr-integrations-service
+        image: lr-integrations-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-integrations-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-integrations-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-integrations-service/.env
+
+    lr-kyc-service:
+        container_name: lr-kyc-service
+        image: lr-kyc-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-kyc-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-kyc-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-kyc-service/.env
+
+    lr-admin-service:
+        container_name: lr-admin-service
+        image: lr-admin-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-admin-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-admin-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-admin-service/.env
+
+    lr-audit-service:
+        container_name: lr-audit-service
+        image: lr-audit-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-audit-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-audit-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-rabbitmq
+            - lr-elasticsearch
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-audit-service/.env
+
+    lr-search-service:
+        container_name: lr-search-service
+        image: lr-search-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-search-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-search-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-rabbitmq
+            - lr-elasticsearch
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-search-service/.env
+
+    lr-ecom-product-service:
+        container_name: lr-ecom-product-service
+        image: lr-ecom-product-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-ecom-product-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-ecom-product-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-ecom-product-service/.env
+
+    lr-ecom-order-service:
+        container_name: lr-ecom-order-service
+        image: lr-ecom-order-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-ecom-order-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-ecom-order-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-ecom-order-service/.env
+
+    lr-ecom-pricing-service:
+        container_name: lr-ecom-pricing-service
+        image: lr-ecom-pricing-service:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            context: ../lr-ecom-pricing-service
+            dockerfile: Dockerfile
+            target: development
+        volumes:
+            - ../lr-ecom-pricing-service:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - lr-postgres
+            - lr-rabbitmq
+            - lr-redis
+        command: npm run start:dev
+        networks:
+            - lr-network
+        env_file: ../lr-ecom-pricing-service/.env
+
+    lr-api-gateway:
+        container_name: lr-api-gateway
+        image: lr-api-gateway:1.0.0
+        build:
+            args:
+                GITHUB_TOKEN: $GITHUB_TOKEN
+            dockerfile: Dockerfile
+            context: .
+            target: development
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        command: npm run start:dev
+        depends_on:
+            - lr-rabbitmq
+        ports:
+            - 8085:8085
+        networks:
+            - lr-network
+        env_file: .env
+
+networks:
+    lr-network:
+
+volumes:
+    postgresdata:
+    mongodbdata:
+    lr_rabbitmq_data:
