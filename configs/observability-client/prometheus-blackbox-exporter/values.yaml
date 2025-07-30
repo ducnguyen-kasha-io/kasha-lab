@@ -19,6 +19,12 @@ serviceMonitor:
       url: https://app.kasha.io/studio
     - name: admin
       url: https://admin.kasha.io
+    - name: chat-widget
+      url: https://app.kasha.io/chat-widget
+    - name: tools
+      url: https://app.kasha.io/tools
+    - name: cashier
+      url: https://app.kasha.io/cashier
     # - name: cdn-1
     #   url: https://cdn.kasha.io
     # - name: cdn-2
