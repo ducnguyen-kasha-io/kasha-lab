@@ -1,11 +1,15 @@
 environments:
   dev:
-    kubeContext: gke-dev-kasha
+    kubeContext: gke-lr-dev
   stg:
-    kubeContext: gke-staging-kasha
-  prd:
-    kubeContext: gke-prod-kasha
-  bastion-prd:
-    kubeContext: gke-bastion-prod-kasha
+    kubeContext: gke-lr-stg
   test:
-    kubeContext: gke-test-kasha
+    kubeContext: gke-lr-test
+  demo:
+    kubeContext: gke-lr-demo
+  prd:
+    kubeContext: gke-lr-prd
+  bastion-prd:
+    kubeContext: gke-lr-bastion-prd
+  bastion-non-prd:
+    kubeContext: gke-lr-bastion-non-prd
