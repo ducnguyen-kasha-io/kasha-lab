@@ -23,3 +23,5 @@ repositories:
     url: https://charts.external-secrets.io
   - name: stakater
     url: https://stakater.github.io/stakater-charts/
+  - name: opensearch-operator
+    url: https://opensearch-project.github.io/opensearch-k8s-operator/

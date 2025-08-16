@@ -98,3 +98,19 @@ releases:
     version: 2.1.4
     inherit:
       - template: default
+
+  - name: opensearch-operator
+    namespace: siem
+    kubeContext: gke-lr-bastion-prd
+    chart: opensearch-operator/opensearch-operator
+    version: 2.8.0
+    inherit:
+      - template: default
+
+  - name: opensearch
+    namespace: siem
+    kubeContext: gke-lr-bastion-prd
+    chart: opensearch-operator/opensearch-cluster
+    version: 3.1.0
+    inherit:
+      - template: default
