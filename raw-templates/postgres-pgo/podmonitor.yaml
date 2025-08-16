@@ -1,0 +1,138 @@
+---
+# PodMonitor for PostgreSQL Operator metrics
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: pgo-metrics
+  labels:
+    app: postgres-operator
+spec:
+  selector:
+    matchLabels:
+      postgres-operator.crunchydata.com/control-plane: ""  # Just checking for existence of label
+  podMetricsEndpoints:
+  - port: metrics
+    scheme: https
+    interval: 15s
+    scrapeTimeout: 15s
+    tlsConfig:
+      insecureSkipVerify: true
+
+---
+# PodMonitor for Crunchy PostgreSQL Exporter
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: crunchy-postgres-exporter
+spec:
+  jobLabel: crunchy-postgres-exporter
+  namespaceSelector:
+    any: true
+  selector:
+    matchLabels:
+      postgres-operator.crunchydata.com/crunchy-postgres-exporter: "true"
+  podMetricsEndpoints:
+  - interval: 30s
+    port: exporter
+    scrapeTimeout: 10s
+    relabelings:
+    # Keep exporter port and drop all others
+    # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#pod
+    - sourceLabels: [__meta_kubernetes_pod_container_port_number]
+      action: keep
+      regex: "9187"
+    # Set label for namespace
+    - sourceLabels: [__meta_kubernetes_namespace]
+      targetLabel: kubernetes_namespace
+    # Set label for pod name
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      targetLabel: pod
+    # Convert namespace and cluster name to pg_cluster=namespace:cluster
+    - sourceLabels: [__meta_kubernetes_namespace,__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster]
+      targetLabel: pg_cluster
+      separator: ":"
+      replacement: '$1$2'
+    # Convert kubernetes pod ip to ip
+    - sourceLabels: [__meta_kubernetes_pod_ip]
+      targetLabel: ip
+    # Convert postgres-operator.crunchydata.com/instance to deployment
+    - sourceLabels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_instance]
+      targetLabel: deployment
+    # Convert postgres-operator.crunchydata.com/role to role
+    - sourceLabels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role]
+      targetLabel: role
+
+---
+# PodMonitor for Crunchy OpenTelemetry Collector
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: crunchy-otel-collector
+  labels:
+    app: crunchy-otel-collector
+spec:
+  selector:
+    matchLabels:
+      postgres-operator.crunchydata.com/crunchy-otel-collector: "true"
+  podMetricsEndpoints:
+  - port: "9187"
+    interval: 15s
+    scrapeTimeout: 15s
+    relabelings:
+    # Keep exporter port and drop all others
+    - sourceLabels: [__meta_kubernetes_pod_container_port_number]
+      action: keep
+      regex: "9187"
+    # Set label for namespace
+    - sourceLabels: [__meta_kubernetes_namespace]
+      targetLabel: kubernetes_namespace
+    # Set label for pod name
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      targetLabel: pod
+    # Convert namespace and cluster name to pg_cluster=namespace:cluster
+    - sourceLabels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster]
+      targetLabel: pg_cluster
+      separator: ":"
+      replacement: "${1}:${2}"
+    # Convert kubernetes pod ip to ip
+    - sourceLabels: [__meta_kubernetes_pod_ip]
+      targetLabel: ip
+    # Convert postgres-operator.crunchydata.com/instance to deployment
+    - sourceLabels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_instance]
+      targetLabel: deployment
+    # Convert postgres-operator.crunchydata.com/role to role
+    - sourceLabels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role]
+      targetLabel: role
+    # The following relabels should make it easier to use pgMonitor dashboards.
+    # Note: The following was added for the pgBouncer dashboard and what labels it requires.
+    # For pgBouncer, `exp_type` should be equal to role.
+    - sourceLabels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role]
+      targetLabel: exp_type
+    # `cluster_name` is equivalent to `pg_cluster`
+    - sourceLabels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster]
+      targetLabel: cluster_name
+      separator: ":"
+      replacement: "${1}:${2}"
+
+# ---
+# # PrometheusRule for alert rules (replaces rule_files section)
+# apiVersion: monitoring.coreos.com/v1
+# kind: PrometheusRule
+# metadata:
+#   name: crunchy-postgres-alerts
+#   labels:
+#     app: postgres-operator
+# spec:
+#   groups:
+#   - name: postgres.rules
+#     rules:
+#     # Add your alert rules here
+#     # Example placeholder rule:
+#     - alert: PostgreSQLDown
+#       expr: pg_up == 0
+#       for: 5m
+#       labels:
+#         severity: critical
+#       annotations:
+#         summary: "PostgreSQL instance is down"
+#         description: "PostgreSQL instance {{ $labels.instance }} has been down for more than 5 minutes."
