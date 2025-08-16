@@ -25,3 +25,6 @@ repositories:
     url: https://stakater.github.io/stakater-charts/
   - name: opensearch-operator
     url: https://opensearch-project.github.io/opensearch-k8s-operator/
+  - name: pgo
+    url: registry.developers.crunchydata.com/crunchydata
+    oci: true

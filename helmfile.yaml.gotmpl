@@ -114,3 +114,11 @@ releases:
     version: 3.1.0
     inherit:
       - template: default
+
+  - name: pgo
+    namespace: siem
+    kubeContext: gke-lr-bastion-prd
+    chart: pgo/pgo
+    version: 5.8.2
+    inherit:
+      - template: default      
