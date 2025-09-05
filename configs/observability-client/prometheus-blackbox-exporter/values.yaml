@@ -25,7 +25,7 @@ serviceMonitor:
       url: https://app.kasha.io/tools
     - name: cashier
       url: https://app.kasha.io/cashier
-    # - name: cdn-1
-    #   url: https://cdn.kasha.io
-    # - name: cdn-2
-    #   url: https://cdn2.kasha.io
+    - name: api-gateway
+      url:  https://api-gateway.kasha.io/health
+    - name: payments-api-gateway
+      url: https://api-gateway.payments.kasha.io/health
