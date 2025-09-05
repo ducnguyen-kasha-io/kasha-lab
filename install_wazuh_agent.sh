@@ -38,6 +38,29 @@ check_privileges() {
     fi
 }
 
+# Function to check if Wazuh agent is already installed
+check_existing_installation() {
+    if [[ "$OS" == "macos" ]]; then
+        if [[ -d "/Library/Ossec" ]]; then
+            log_warn "Wazuh agent appears to be already installed on macOS"
+            read -p "Continue anyway? (y/N): " continue_install
+            if [[ ! "$continue_install" =~ ^[Yy]$ ]]; then
+                log_info "Installation cancelled by user"
+                exit 0
+            fi
+        fi
+    else
+        if command -v wazuh-control >/dev/null 2>&1 || [[ -d "/var/ossec" ]]; then
+            log_warn "Wazuh agent appears to be already installed on Linux"
+            read -p "Continue anyway? (y/N): " continue_install
+            if [[ ! "$continue_install" =~ ^[Yy]$ ]]; then
+                log_info "Installation cancelled by user"
+                exit 0
+            fi
+        fi
+    fi
+}
+
 # Function to detect OS
 detect_os() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -247,6 +270,7 @@ main() {
     # Check system requirements
     check_privileges
     detect_os
+    check_existing_installation
     get_credentials "$@"
     
     # Install based on OS
