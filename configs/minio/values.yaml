@@ -1,0 +1,17 @@
+replicas: 1
+mode: standalone
+persistence:
+  enabled: true
+  size: 20Gi
+rootUser: rootuser
+rootPassword: rootpass123
+buckets:
+  - name: pgo-backup
+    policy: none
+resources:
+  requests:
+    memory: 500Mi
+    cpu: 500m
+  limits:
+    memory: 4Gi
+    cpu: 2
