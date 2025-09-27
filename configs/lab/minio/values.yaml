@@ -1,8 +1,8 @@
-replicas: 1
-mode: standalone
+replicas: 2
+mode: distributed
 persistence:
   enabled: true
-  size: 20Gi
+  size: 50Gi
 rootUser: rootuser
 rootPassword: rootpass123
 buckets:
@@ -13,5 +13,5 @@ resources:
     memory: 500Mi
     cpu: 500m
   limits:
-    memory: 4Gi
+    memory: 6Gi
     cpu: 2

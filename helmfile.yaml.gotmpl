@@ -116,9 +116,17 @@ releases:
       - template: default
 
   - name: pgo
-    namespace: siem
+    namespace: lab
     kubeContext: gke-lr-bastion-prd
     chart: pgo/pgo
     version: 5.8.2
     inherit:
       - template: default      
+
+  - name: minio
+    namespace: lab
+    kubeContext: gke-lr-bastion-prd
+    chart: minio/minio
+    version: 5.4.0
+    inherit:
+      - template: default

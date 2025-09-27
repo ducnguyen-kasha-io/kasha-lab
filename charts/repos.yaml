@@ -28,3 +28,5 @@ repositories:
   - name: pgo
     url: registry.developers.crunchydata.com/crunchydata
     oci: true
+  - name: minio
+    url: https://charts.min.io/
